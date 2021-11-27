@@ -3,9 +3,7 @@
 FROM golang:1.16-alpine
 
 WORKDIR /app
-COPY go.mod ./
-COPY main.go ./
-COPY form.html ./
+COPY . ./
 RUN go build main.go
 
 CMD [ "/app/main" ]
