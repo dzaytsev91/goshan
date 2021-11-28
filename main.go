@@ -15,8 +15,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if r.FormValue("name") == "ty pidor" {
-		    w.Header().Set("Content-Type", "text/html; charset=utf-8")
-            fmt.Fprintf(w, "<img src='assets/https_bit.ly_3FTx8St.jpg' width='500' alt='pidrila'>")
+		    http.ServeFile(w, r, "image.html")
         } else {
             fmt.Fprintf(w, "Wrong password!")
         }
