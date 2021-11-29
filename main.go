@@ -10,11 +10,13 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		 http.ServeFile(w, r, "form.html")
 	case "POST":
+	    fmt.Println("%v\n", r)
+	    fmt.Printf("tried password: %s\n", r.FormValue("password"))
 		if err := r.ParseForm(); err != nil {
 			fmt.Fprintf(w, "ParseForm() err: %v", err)
 			return
 		}
-		if r.FormValue("name") == "ty pidor" {
+		if r.FormValue("password") == "ty pidor" {
 		    http.ServeFile(w, r, "image.html")
         } else {
             fmt.Fprintf(w, "Wrong password!")
