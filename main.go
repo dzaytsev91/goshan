@@ -18,6 +18,8 @@ func hello(w http.ResponseWriter, r *http.Request) {
 		}
 		if r.FormValue("password") == "ty pidor" {
 		    http.ServeFile(w, r, "image.html")
+		} else if r.FormValue("password") == "typidor" {
+		    fmt.Fprintf(w, "It was close!")
         } else {
             fmt.Fprintf(w, "Wrong password!")
         }
