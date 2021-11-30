@@ -1,91 +1,96 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="UTF-8" />
+    <meta charset="UTF-8" />
     <style>
+        /* GENERAL STYLES  - NOT NEEDED*/
+        body {
+            font-size: 16px;
+            font-family: Tahoma, Geneva, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+        }
 
-/* GENERAL STYLES  - NOT NEEDED*/
-body {
-	font-size: 16px;
-	font-family: Tahoma, Geneva, sans-serif;
-	max-width: 500px;
-	margin: 0 auto;
-}
-h1 {
-    font-size: 18px;
-    text-align: center;
-    margin: 20px 0 20px 0;
-}
+        h1 {
+            font-size: 18px;
+            text-align: center;
+            margin: 20px 0 20px 0;
+        }
 
-h1 + p {
-	text-align: center;
-}
+        h1+p {
+            text-align: center;
+        }
 
-h1 + p a, .redly {
-    background: #b93232;
-    color: #FFF;
-    text-decoration: none;
-    display: block;
-    margin: 0 auto 22px auto;
-    width: 140px;
-    text-align: center;
-    padding: 6px 14px 8px 14px;
-    border-radius: 3px;
-}
+        h1+p a,
+        .redly {
+            background: #b93232;
+            color: #FFF;
+            text-decoration: none;
+            display: block;
+            margin: 0 auto 22px auto;
+            width: 140px;
+            text-align: center;
+            padding: 6px 14px 8px 14px;
+            border-radius: 3px;
+        }
 
-/* NEEDED STYLES */
-#hint {
-    display: block;
-	padding: 8px 22px;
-    margin: 0 0 1px 0;
-	cursor: pointer;
-	background: #6AAB95;
-	border-radius: 3px;
-	color: #FFF;
-	transition: ease .5s;
-    width: 30px;
-}
-#hint:hover {
-	background: #4E8774;
-}
-.content {
-    background: #E2E5F6;
-    padding: 10px 25px;
-    border: 1px solid #A7A7A7;
-	margin: 0 0 1px 0;
-	border-radius: 3px;
-}
+        /* NEEDED STYLES */
+        #hint {
+            display: block;
+            padding: 8px 22px;
+            margin: 0 0 1px 0;
+            cursor: pointer;
+            background: #6AAB95;
+            border-radius: 3px;
+            color: #FFF;
+            transition: ease .5s;
+            width: 30px;
+        }
 
-input + .content {
-	display: none;
-}
+        #hint:hover {
+            background: #4E8774;
+        }
 
-input:checked + .content {
-	display: block;
-}
+        .content {
+            background: #E2E5F6;
+            padding: 10px 25px;
+            border: 1px solid #A7A7A7;
+            margin: 0 0 1px 0;
+            border-radius: 3px;
+        }
 
-.accordion {
-	display: none;
-}
+        input+.content {
+            display: none;
+        }
 
-</style>
+        input:checked+.content {
+            display: block;
+        }
+
+        .accordion {
+            display: none;
+        }
+    </style>
 </head>
+
 <body>
-<div>
-    <img src="assets/gendalf.jpg" width="500" alt="">
-    <form method="POST" action="/">
-        <label>password</label>
-        <input name="password" type="password" type="text" value="" required />
-        <br>
-        <input type="submit" value="Submit" />
-        <label for="title1" id="hint">
-            <span>Hint</span>
-        </label>
-        <input type="checkbox" id="title1" class="accordion" />
-        <div class="content">
-            <p>MD5: 6ff7844002c72d3659c615798fbefebe</p>
-        </div>
-    </form>
-</div>
+    <div>
+        <img src="assets/gendalf.jpg" width="500" alt="">
+        <form method="POST" action="/">
+            <label>password</label>
+            <input name="password" type="password" type="text" value="" required />
+            <br>
+            <input type="submit" value="Submit" />
+            <label for="title1" id="hint">
+                <span>Hint</span>
+            </label>
+            <input type="checkbox" id="title1" class="accordion" />
+            <div class="content">
+                <p>MD5: 6ff7844002c72d3659c615798fbefebe</p>
+            </div>
+        </form>
+    </div>
 </body>
+
 </html>
