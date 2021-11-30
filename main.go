@@ -7,11 +7,11 @@ import (
 )
 
 func hello(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("%v\n", r)
 	switch r.Method {
 	case "GET":
 		http.ServeFile(w, r, "form.html")
 	case "POST":
-		fmt.Printf("%v\n", r)
 		fmt.Printf("tried password: %s\n", r.FormValue("password"))
 		if err := r.ParseForm(); err != nil {
 			fmt.Fprintf(w, "ParseForm() err: %v", err)
