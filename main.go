@@ -17,12 +17,13 @@ func hello(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "ParseForm() err: %v", err)
 			return
 		}
-		if r.FormValue("password") == "ty pidor" {
+		uzbek := r.FormValue("uzbek")
+		devyataev := r.FormValue("devyataev")
+		hotel := r.FormValue("hotel")
+		if uzbek == "39.834 65.498" && devyataev == "54.095 43.266" && hotel == "12.958 100.888" {
 			http.ServeFile(w, r, "image.html")
-		} else if r.FormValue("password") == "typidor" {
-			fmt.Fprintf(w, "It was close!")
 		} else {
-			fmt.Fprintf(w, "Wrong password!")
+			fmt.Fprintf(w, "One of password was wrong!")
 		}
 	default:
 		fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")
