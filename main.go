@@ -20,10 +20,23 @@ func hello(w http.ResponseWriter, r *http.Request) {
 		uzbek := r.FormValue("uzbek")
 		devyataev := r.FormValue("devyataev")
 		hotel := r.FormValue("hotel")
-		if uzbek == "39.834 65.498" && devyataev == "54.095 43.266" && hotel == "12.958 100.888" {
+		var uzbek_pass, devyataev_pass, hotel_pass bool
+		if uzbek == "39.834 65.498" {
+			uzbek_pass = true
+		}
+		if devyataev == "54.095 43.266" {
+			devyataev_pass = true
+		}
+		if hotel == "12.958 100.888" {
+			hotel_pass = true
+		}
+
+		if uzbek_pass && devyataev_pass && hotel_pass {
 			http.ServeFile(w, r, "image.html")
 		} else {
-			fmt.Fprintf(w, "One of password was wrong!")
+			errorMsg := fmt.Sprintf("First password: %t\nSecond: password: %t\nThird password: %t", uzbek_pass, devyataev_pass, hotel_pass)
+			fmt.Printf(errorMsg)
+			fmt.Fprintf(w, errorMsg)
 		}
 	default:
 		fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")
