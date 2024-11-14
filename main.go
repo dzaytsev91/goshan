@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("%v\n", r)
 	switch r.Method {
 	case "GET":
 		http.ServeFile(w, r, "form.html")
@@ -17,24 +17,20 @@ func hello(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "ParseForm() err: %v", err)
 			return
 		}
-		uzbek := r.FormValue("uzbek")
-		devyataev := r.FormValue("devyataev")
-		hotel := r.FormValue("hotel")
-		var uzbek_pass, devyataev_pass, hotel_pass bool
-		if uzbek == "39.834 65.498" {
-			uzbek_pass = true
+		story := r.FormValue("story")
+		geogess := r.FormValue("geogess")
+		var story_pass, geogess_pass bool
+		if story == "26270" {
+			story_pass = true
 		}
-		if devyataev == "54.095 43.266" {
-			devyataev_pass = true
-		}
-		if hotel == "12.958 100.888" {
-			hotel_pass = true
+		if strings.ToLower(geogess) == "ван даркхолм" {
+			geogess_pass = true
 		}
 
-		if uzbek_pass && devyataev_pass && hotel_pass {
+		if story_pass && geogess_pass {
 			http.ServeFile(w, r, "image.html")
 		} else {
-			errorMsg := fmt.Sprintf("First password: %t\nSecond: password: %t\nThird password: %t", uzbek_pass, devyataev_pass, hotel_pass)
+			errorMsg := fmt.Sprintf("First password: %t\nSecond: password: %t\n", story_pass, geogess_pass)
 			fmt.Printf(errorMsg)
 			fmt.Fprintf(w, errorMsg)
 		}
