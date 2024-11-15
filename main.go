@@ -12,13 +12,13 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		http.ServeFile(w, r, "form.html")
 	case "POST":
-		fmt.Printf("tried password: %s\n", r.FormValue("password"))
 		if err := r.ParseForm(); err != nil {
 			fmt.Fprintf(w, "ParseForm() err: %v", err)
 			return
 		}
 		story := r.FormValue("story")
 		geogess := r.FormValue("geogess")
+		log.Printf("story input: %s, geogess: %s", story, geogess)
 		var story_pass, geogess_pass bool
 		if story == "26270" {
 			story_pass = true
