@@ -23,7 +23,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
 		if story == "26270" {
 			story_pass = true
 		}
-		if strings.ToLower(geogess) == "ван даркхолм" {
+		if strings.ToLower(strings.ReplaceAll(geogess, " ", " ")) == "вандаркхолм" {
 			geogess_pass = true
 		}
 
@@ -43,7 +43,7 @@ func main() {
 	http.HandleFunc("/", hello)
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
 
-	fmt.Printf("Starting server for testing HTTP POST...\n")
+	fmt.Printf("Starting server\n")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
