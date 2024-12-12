@@ -33,12 +33,14 @@ var tasks = []Task{
 }
 
 func tasksHandler(w http.ResponseWriter, r *http.Request) {
+	println("got request")
 	data, err := json.Marshal(tasks)
 	if err != nil {
 		w.Write([]byte(err.Error()))
 		return
 	}
 	w.Write(data)
+	println("return data %s", data)
 	return
 }
 
