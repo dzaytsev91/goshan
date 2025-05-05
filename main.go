@@ -34,6 +34,14 @@ var tasks = []Task{
 	},
 }
 
+func copyHeader(dst, src http.Header) {
+	for k, vv := range src {
+		for _, v := range vv {
+			dst.Add(k, v)
+		}
+	}
+}
+
 func tasksHandler(w http.ResponseWriter, r *http.Request) {
 	println("got request")
 	data, err := json.Marshal(tasks)
@@ -128,38 +136,52 @@ func logCurl(w http.ResponseWriter, r *http.Request) {
 
 func hello(w http.ResponseWriter, r *http.Request) {
 	logCurl(w, r)
+	client := &http.Client{}
 	// Create the response structure
-	response := map[string]interface{}{
-		"result": map[string]interface{}{
-			"id":        400019948,
-			"mac":       "08d1f948e320",
-			"sn":        "20231221L11054",
-			"secret":    "d70f3681cb3afb9b",
-			"timezone":  3.0,
-			"locale":    "Europe/Moscow",
-			"shareOpen": 0,
-			"settings": map[string]interface{}{
-				"autoWork": 1,
-			},
-			"petInTipLimit": 0,
-		},
-	}
+	//response := map[string]interface{}{
+	//	"result": map[string]interface{}{
+	//		"id":        400019948,
+	//		"mac":       "08d1f948e320",
+	//		"sn":        "20231221L11054",
+	//		"secret":    "d70f3681cb3afb9b",
+	//		"timezone":  3.0,
+	//		"locale":    "Europe/Moscow",
+	//		"shareOpen": 0,
+	//		"settings": map[string]interface{}{
+	//			"autoWork": 1,
+	//		},
+	//		"petInTipLimit": 0,
+	//	},
+	//}
 
 	// Set content type header
-	w.Header().Set("Content-Type", "application/json;charset=utf-8")
+	//w.Header().Set("Content-Type", "application/json;charset=utf-8")
 
 	// Encode and send the response
-	err := json.NewEncoder(w).Encode(response)
+	//err := json.NewEncoder(w).Encode(response)
+	//if err != nil {
+	//	log.Printf("Error encoding JSON response: %v", err)
+	//	http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	//}
+
+	resp, err := client.Do(r)
 	if err != nil {
-		log.Printf("Error encoding JSON response: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		http.Error(w, "Server Error", http.StatusInternalServerError)
+		log.Fatal("ServeHTTP:", err)
 	}
+	defer resp.Body.Close()
+
+	log.Println(r.RemoteAddr, " ", resp.Status)
+
+	copyHeader(w.Header(), resp.Header)
+	w.WriteHeader(resp.StatusCode)
+	io.Copy(w, resp.Body)
 
 	//w.Write([]byte("Success"))
 }
 
 func main() {
-	http.HandleFunc("/6/t4/dev_iot_device_info", dev_iot_device_info)
+	//http.HandleFunc("/6/t4/dev_iot_device_info", dev_iot_device_info)
 	http.HandleFunc("/", hello)
 	//http.HandleFunc("/tasks", tasksHandler)
 	//http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
