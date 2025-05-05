@@ -100,8 +100,37 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	log.Println("Incoming request as cURL:")
 	log.Println(curlString)
 
-	// Your normal response
-	w.Write([]byte("Success"))
+	// Create the response structure
+	response := map[string]interface{}{
+		"result": map[string]interface{}{
+			"id":        400019948,
+			"mac":       "08d1f948e320",
+			"sn":        "20231221L11054",
+			"secret":    "d70f3681cb3afb9b",
+			"timezone":  3.0,
+			"locale":    "Europe/Moscow",
+			"shareOpen": 1,
+			"typeCode":  2,
+			"withK3":    0,
+			"settings": map[string]interface{}{
+				"autoWork": 1,
+			},
+			"multiConfig":   true,
+			"petInTipLimit": 15,
+		},
+	}
+
+	// Set content type header
+	w.Header().Set("Content-Type", "application/json;charset=utf-8")
+
+	// Encode and send the response
+	err := json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Printf("Error encoding JSON response: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+
+	//w.Write([]byte("Success"))
 }
 
 func main() {
