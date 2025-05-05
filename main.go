@@ -46,7 +46,32 @@ func tasksHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func hello(w http.ResponseWriter, r *http.Request) {
+func dev_iot_device_info(w http.ResponseWriter, r *http.Request) {
+	logCurl(w, r)
+	response := map[string]interface{}{
+		"result": map[string]interface{}{
+			"id":            853921,
+			"deviceName":    "d_t4_20231221L11054",
+			"deviceSecret":  "3799f97b454d27926cc6f3d7cefcd79c",
+			"iotInstanceId": "iot-600a5gmp",
+			"productKey":    "a54dw3GX0NZ",
+			"mqttHost":      "iot-600a5gmp.mqtt.iothub.aliyuncs.com",
+			"createdAt":     1706374998078,
+			"type":          1,
+			"regionId":      "eu-central-1",
+		},
+	}
+	w.Header().Set("Content-Type", "application/json;charset=utf-8")
+
+	// Encode and send the response
+	err := json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Printf("Error encoding JSON response: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+}
+
+func logCurl(w http.ResponseWriter, r *http.Request) {
 	// Create a buffer to build our cURL command
 	var curlCmd bytes.Buffer
 
@@ -99,7 +124,10 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	// Log the complete cURL command
 	log.Println("Incoming request as cURL:")
 	log.Println(curlString)
+}
 
+func hello(w http.ResponseWriter, r *http.Request) {
+	logCurl(w, r)
 	// Create the response structure
 	response := map[string]interface{}{
 		"result": map[string]interface{}{
@@ -134,6 +162,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	http.HandleFunc("/6/t4/dev_iot_device_info", dev_iot_device_info)
 	http.HandleFunc("/", hello)
 	//http.HandleFunc("/tasks", tasksHandler)
 	//http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
