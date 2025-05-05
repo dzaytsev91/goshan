@@ -137,14 +137,11 @@ func hello(w http.ResponseWriter, r *http.Request) {
 			"secret":    "d70f3681cb3afb9b",
 			"timezone":  3.0,
 			"locale":    "Europe/Moscow",
-			"shareOpen": 1,
-			"typeCode":  2,
-			"withK3":    0,
+			"shareOpen": 0,
 			"settings": map[string]interface{}{
 				"autoWork": 1,
 			},
-			"multiConfig":   true,
-			"petInTipLimit": 15,
+			"petInTipLimit": 0,
 		},
 	}
 
