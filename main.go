@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type Task struct {
@@ -45,52 +47,61 @@ func tasksHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	// Prepare log data
-	fmt.Println("______________________________________________")
-	fmt.Printf("%v\n", r)
-	fmt.Printf("Method: %s\n", r.Method)
-	fmt.Printf("Headers: %s\n", r.Header)
-	fmt.Printf("URL: %s\n", r.URL.String())
-	switch r.Method {
-	case "GET":
-		w.Write([]byte("Success"))
-	case "POST":
-		body, err := io.ReadAll(r.Body)
+	// Create a buffer to build our cURL command
+	var curlCmd bytes.Buffer
+
+	// Start with the basic curl command and method
+	curlCmd.WriteString("curl -X ")
+	curlCmd.WriteString(r.Method)
+	curlCmd.WriteString(" \\\n")
+
+	// Add the URL
+	curlCmd.WriteString("  '")
+	curlCmd.WriteString("http://") // or https:// based on your server
+	curlCmd.WriteString(r.Host)
+	curlCmd.WriteString(r.URL.String())
+	curlCmd.WriteString("' \\\n")
+
+	// Add all headers
+	for name, values := range r.Header {
+		for _, value := range values {
+			curlCmd.WriteString("  -H '")
+			curlCmd.WriteString(name)
+			curlCmd.WriteString(": ")
+			curlCmd.WriteString(value)
+			curlCmd.WriteString("' \\\n")
+		}
+	}
+
+	// Handle request body for POST, PUT, PATCH
+	if r.Method == http.MethodPost || r.Method == http.MethodPut || r.Method == http.MethodPatch {
+		// Read the body
+		bodyBytes, err := io.ReadAll(r.Body)
 		if err != nil {
 			log.Printf("Error reading body: %v", err)
-			http.Error(w, "can't read body", http.StatusBadRequest)
-			return
-		}
+		} else {
+			// Restore the body
+			r.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 
-		// Log the raw body
-		log.Printf("POST body: %s\n", string(body))
-		w.Write([]byte("Success"))
-		//if err := r.ParseForm(); err != nil {
-		//	fmt.Fprintf(w, "ParseForm() err: %v", err)
-		//	return
-		//}
-		//story := r.FormValue("story")
-		//geogess := r.FormValue("geogess")
-		//log.Printf("story input: %s, geogess: %s", story, geogess)
-		//var story_pass, geogess_pass bool
-		//if story == "26270" {
-		//	story_pass = true
-		//}
-		//if strings.ToLower(strings.ReplaceAll(geogess, " ", " ")) == "вандаркхолм" {
-		//	geogess_pass = true
-		//}
-		//
-		//if story_pass && geogess_pass {
-		//	http.ServeFile(w, r, "image.html")
-		//} else {
-		//	errorMsg := fmt.Sprintf("First password: %t\nSecond: password: %t\n", story_pass, geogess_pass)
-		//	fmt.Printf(errorMsg)
-		//	fmt.Fprintf(w, errorMsg)
-		//}
-	default:
-		fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")
+			if len(bodyBytes) > 0 {
+				// Escape single quotes in the body
+				bodyStr := strings.ReplaceAll(string(bodyBytes), "'", `'\''`)
+				curlCmd.WriteString("  --data-raw '")
+				curlCmd.WriteString(bodyStr)
+				curlCmd.WriteString("' \\\n")
+			}
+		}
 	}
-	fmt.Println("______________________________________________")
+
+	// Remove the trailing backslash and newline
+	curlString := strings.TrimSuffix(curlCmd.String(), " \\\n")
+
+	// Log the complete cURL command
+	log.Println("Incoming request as cURL:")
+	log.Println(curlString)
+
+	// Your normal response
+	w.Write([]byte("Success"))
 }
 
 func main() {
